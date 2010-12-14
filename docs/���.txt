@@ -1,0 +1,29 @@
+rhttpd 启动分析
+    -- 分析启动参数  mod_init
+    -- 读取配置      mod_config  ( 可能有多种不同的配置类型 )
+    -- 加载动态模块  mod_so     
+    -- 启动mpm并发模型  mod_mpm_xxx  （ 可能有多种不同的并发模型 ）
+    -- 主进程开始进行监听
+    
+rhttpd 请求处理分析
+    -- 接受请求
+    -- 交给mpm开始进行请求的处理  mod_re_process
+	   -- 分析请求 mod_re_protocal ( 可能有很多种协议 )
+	   -- 返回结果
+    
+全局实体 
+
+rhttp_request
+
+rhttp_reponse
+
+rhttp_config
+
+rhttp_init
+
+
+
+
+
+
+    
