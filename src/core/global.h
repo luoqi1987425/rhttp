@@ -1,18 +1,19 @@
+#ifndef RHTTP_GLOBAL_H
+#define RHTTP_GLOBAL_H
+
 typedef struct{
     
-    struct sockaddr_in * clientfd,
-    char               * buf,
+    struct sockaddr_in * client_addr;
+    char               * buf;
     
-    
-    
-}rhttp_request
+}rhttp_request;
 
 
 typedef struct{
     
     
     
-}rhttp_response
+}rhttp_response;
 
 #ifndef NULL
 	#define NULL 0
@@ -24,4 +25,7 @@ typedef struct{
 
 #ifndef FALSE
 	#define FALSE 0
+#endif
+
+
 #endif

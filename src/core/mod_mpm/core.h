@@ -7,9 +7,7 @@
  */
 typedef struct{
     
-    void    (*start ) ( rhttp_mod_config * config );
-
-	void 	(*process)( char * args  , void * );
+    void    (*process)( rhttp_request * request );
 
 
 }rhttp_mod_mpm;

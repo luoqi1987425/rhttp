@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "core/global.h"
 #include "core/mod_bootstrap/core.h"
 #include "core/mod_register/core.h"
+#include "core/mod_mpm/core.h"
 
 //全局变量
 rhttp_mod_bootstrap * rhttp_bootstrap;
 rhttp_mod_register  * rhttp_register;
 //rhttp_mod_config    * rhttp_config;
 //rhttp_mod_so        * rhttp_so;
-//rhttp_mod_mpm       * rhttp_mpm;
+rhttp_mod_mpm       * rhttp_mpm;
 
 
 int main( int argc, char * argv[] ){

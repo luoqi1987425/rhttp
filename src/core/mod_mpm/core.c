@@ -1,10 +1,23 @@
-#include "multhread/core.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include "../global.h"    
+#include "core.h"
+
+
+
+static rhttp_mod_mpm * _instance;
+static void _simple_process( rhttp_request * request );
+
 
 rhttp_mod_mpm * rhttp_mod_mpm_factory( char * type ){
         
-    if( type == "multhread" ){
-        _instance = ( rhttp_mod_mpm *)malloc( sizeof( rhttp_mod_mpm ) );
-		_instance->start    = multhread_start;
-		_instance->process  = multhread_process;
-    }
+    _instance 		= ( rhttp_mod_mpm *)malloc( sizeof( rhttp_mod_mpm ) );
+    _instance->process  = _simple_process;
+}
+
+static void _simple_process( rhttp_request * request ){
+    
+    printf ( "server: got connection from " ) ;
+
 }

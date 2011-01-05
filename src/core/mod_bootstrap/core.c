@@ -2,21 +2,23 @@
 #include <stdlib.h>    
 #include "core.h"
 #include "../mod_register/core.h"
+#include "../mod_mpm/core.h"
 
 
 extern rhttp_mod_register * rhttp_register;
+extern rhttp_mod_mpm 	  * rhttp_mpm;
 extern rhttp_mod_register * rhttp_mod_register_instance();
-extern void _start_listen();
+extern rhttp_mod_mpm 	  * rhttp_mod_mpm_factory();
+extern void start_listen();
 
 static void _start( int argc, char * argv[] );
 static void _init_register();
 static void _init_config();
 static void _init_so();
 static void _init_mpm();
-
-
-
 static rhttp_mod_bootstrap * _instance;
+
+
 
 rhttp_mod_bootstrap * rhttp_mod_bootstrap_instance(){
 
@@ -34,7 +36,7 @@ static void _start( int argc, char * argv[] ){
     _init_config();
     _init_so();
     _init_mpm();
-    _start_listen();
+    start_listen();
     
 }
 
@@ -51,6 +53,6 @@ static void _init_so(){
 }
 
 static void _init_mpm(){
-    //char * mpm_name = "multhread";
-    //rhttp_mod_mpm * rhttp_mod_mpm = rhttp_mod_mpm_factory(mpm_name);
+    char * mpm_name = "simple";
+    rhttp_mpm = rhttp_mod_mpm_factory(mpm_name);
 }

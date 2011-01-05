@@ -1,73 +1,96 @@
-# include <stdio.h>
-# include <string.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include "../global.h"
+#include "../mod_mpm/core.h"
+
+#define SERVERPORT  10088
+#define MAXCONN_NUM 20
+#define MAXDATASIZE 1025
+
+
+extern rhttp_mod_mpm	* rhttp_mpm;
+
 
 static int sockfd;
 
 static struct sockaddr_in server_addr;
-static struct sockaddr_in client_addr;
 
-void _start_listen(){
+static void _init_socket();
+static void _listen();
+static void _accept();
+static rhttp_request *  _build_rhttp_request( struct sockaddr * client_addr, char * buf );
 
-    printf( "start listen \n" );
-    //socket = _init_socket();
-    //_listen();
-    //_accept();
+
+void start_listen(){
+
+    _init_socket();
+    _listen();
+    _accept();
 
 }
 
-/**
+
 
 static void _init_socket(){
     
-    if ( ( sockfd = socket ( AF_INET , SOCK_STREAM , 0) ) == - 1) {
-	        printf ( "socket error \n" ) ;
-	        return 1;
+    	if ( ( sockfd = socket ( AF_INET , SOCK_STREAM , 0) ) == - 1) {
+		perror( "socket error" ) ;
+	        exit(1);
 	}
     
-    server_addr. sin_family = AF_INET ;
-	server_addr. sin_port = htons ( SERVERPORT) ;
-	server_addr. sin_addr. s_addr = INADDR_ANY ;
+	server_addr.sin_family = AF_INET ;
+	server_addr.sin_port = htons (SERVERPORT) ;
+	server_addr.sin_addr.s_addr = INADDR_ANY ;
     
-    if ( bind ( sockfd, ( struct sockaddr * ) & server_addr, sizeof ( struct sockaddr ) ) == - 1) {
+	if ( bind ( sockfd, ( struct sockaddr * ) & server_addr, sizeof ( struct sockaddr ) ) == - 1) {
 	     perror ( "bind error" ) ;
-	     return 1;
+	     exit(1);
 	}
     
 }
 
 static void _listen(){
     
-    if ( listen ( sockfd, MAXCONN_NUM) == - 1) {
+    	if ( listen ( sockfd, MAXCONN_NUM ) == - 1) {
 	      perror ( "listen error" ) ;
-	      return 1;
+	      exit(1);
 	}
     
 }
 
 static void _accept(){
-    
-    mod_mpm = mod_register->get("mpm");
-    
-    while (TRUE) {
+    	
+	int sin_size = sizeof ( struct sockaddr_in ) ;
+	int new_fd;
+
+    	while (TRUE) {
         
-		sin_size = sizeof ( struct sockaddr_in ) ;
-	    if ( ( new_fd = accept ( sockfd, ( struct sockaddr * ) & client_addr, & sin_size) ) == - 1) {
+	    //init client information
+	    struct sockaddr * client_addr = ( struct sockaddr * )malloc( sizeof ( struct sockaddr_in ) );
+	    char	    * buf	  = ( char * )malloc( sizeof ( MAXDATASIZE ) );
+	    
+	    if ( ( new_fd = accept ( sockfd, client_addr, &sin_size) ) == - 1) {
 	            perror ( "accept error" ) ;
 	            continue ;
 	    }
-	    printf ( "server: got connection from %s\n" , inet_ntoa( client_addr. sin_addr) ) ;
     
-	    if ( ( numbytes = recv ( new_fd, buf, MAXDATASIZE, 0) ) == - 1) {
+	    if ( ( recv ( new_fd, buf, MAXDATASIZE, 0) ) == - 1) {
 	            perror ( "recv error" ) ;
-	            return 1;
+	            continue ;
 	    }
     
-	    rhttp_request * request = _build_rhttp_request();
-        mod_mpm->process( request );
-	}
-    
+	    rhttp_request * request = _build_rhttp_request( client_addr , buf );
+            rhttp_mpm->process( request );
+	}   
 }
 
-**/
+static rhttp_request *  _build_rhttp_request( struct sockaddr * client_addr, char * buf ){
+	
+	rhttp_request * request = ( rhttp_request *)malloc( sizeof( rhttp_request ) );
+	request->client_addr 	= client_addr;
+	request->buf	        = buf;
+	return request; 
+}
