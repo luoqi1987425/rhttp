@@ -3,13 +3,14 @@
 
 /**
  * bootstrap 模块的 接口方法
- *
- * start( char * args )
- *
+ * 
+ * start( int argc, char * argv[] )
+ * -e production|development|testing
+ * -c /var/config.xml
  */
 typedef struct{
 
-	void 	(*start)( char * args );
+	void 	(*start)( int argc, char * argv[] );
 
 }rhttp_mod_bootstrap;
 
