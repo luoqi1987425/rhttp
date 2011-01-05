@@ -1,3 +1,7 @@
+# include <stdio.h>
+# include <string.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
 
 static int sockfd;
 
@@ -6,11 +10,14 @@ static struct sockaddr_in client_addr;
 
 void _start_listen(){
 
-    socket = _init_socket();
-    _listen();
-    _accept();
+    printf( "start listen \n" );
+    //socket = _init_socket();
+    //_listen();
+    //_accept();
 
 }
+
+/**
 
 static void _init_socket(){
     
@@ -62,3 +69,5 @@ static void _accept(){
 	}
     
 }
+
+**/

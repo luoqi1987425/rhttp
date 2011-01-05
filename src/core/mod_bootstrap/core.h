@@ -1,5 +1,5 @@
-#ifndef RHTTP_MOD_REGISTER_CORE_H
-#define RHTTP_MOD_REGISTER_CORE_H
+#ifndef RHTTP_MOD_BOOTSTRAP_CORE_H
+#define RHTTP_MOD_BOOTSTRAP_CORE_H
 
 /**
  * bootstrap 模块的 接口方法

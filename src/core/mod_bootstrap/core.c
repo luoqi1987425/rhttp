@@ -1,12 +1,19 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>    
 #include "core.h"
+#include "../mod_register/core.h"
 
 
+extern rhttp_mod_register * rhttp_register;
+extern rhttp_mod_register * rhttp_mod_register_instance();
+extern void _start_listen();
+
+static void _start( int argc, char * argv[] );
 static void _init_register();
 static void _init_config();
 static void _init_so();
 static void _init_mpm();
+
 
 
 static rhttp_mod_bootstrap * _instance;
@@ -32,7 +39,7 @@ static void _start( int argc, char * argv[] ){
 }
 
 static void _init_register(){
-    extern rhttp_mod_register * rhttp_register   = mod_register_instance(); 
+	rhttp_register	= rhttp_mod_register_instance(); 
 }
 
 static void _init_config(){
