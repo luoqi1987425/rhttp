@@ -21,7 +21,7 @@ static struct sockaddr_in server_addr;
 static void _init_socket();
 static void _listen();
 static void _accept();
-static rhttp_request *  _build_rhttp_request( struct sockaddr * client_addr, char * buf );
+static rhttp_request *  _build_rhttp_request( int client_fd , struct sockaddr_in * client_addr, char * buf );
 
 
 void start_listen(){
@@ -73,7 +73,7 @@ static void _accept(){
 	    struct sockaddr_in * client_addr = ( struct sockaddr_in * )malloc( sizeof ( struct sockaddr_in ) );
 	    char	    * buf	  = ( char * )malloc( sizeof ( MAXDATASIZE ) );
 	    
-	    if ( ( new_fd = accept ( sockfd, client_addr, &sin_size) ) == - 1) {
+	    if ( ( new_fd = accept ( sockfd, ( struct sockaddr * )client_addr, &sin_size) ) == - 1) {
 	            perror ( "accept error" ) ;
 	            continue ;
 	    }
@@ -93,8 +93,8 @@ static void _accept(){
 static rhttp_request *  _build_rhttp_request( int client_fd , struct sockaddr_in * client_addr, char * buf ){
 	
 	rhttp_request * request = ( rhttp_request *)malloc( sizeof( rhttp_request ) );
-	request.client_fd       = client_fd;
-    request->client_addr 	= client_addr;
+	request->client_fd       = client_fd;
+        request->client_addr 	= client_addr;
 	request->buf	        = buf;
 	return request; 
 }

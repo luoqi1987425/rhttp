@@ -19,13 +19,13 @@ rhttp_mod_mpm * rhttp_mod_mpm_factory( char * type ){
 
 static void _simple_process( rhttp_request * request ){
     
-    printf ( "server: got connection from %s \n " , inet_ntoa( request->client_addr.sin_addr ) ) ;
+    printf ( "server: got connection from %d \n " , inet_ntoa( request->client_addr->sin_addr ) ) ;
     printf ( "server: data is %s \n" , request->buf );
     //free
-    free( request->client_addr );
-    free( request->buf );
-    close( request->client_fd );
-    free( request );
+    //free( request->client_addr );
+    //free( request->buf );
+    //close( request->client_fd );
+    //free( request );
     
 
 }

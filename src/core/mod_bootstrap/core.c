@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>    
+#include <stdlib.h>
+#include "../global.h"
 #include "core.h"
 #include "../mod_register/core.h"
 #include "../mod_mpm/core.h"
