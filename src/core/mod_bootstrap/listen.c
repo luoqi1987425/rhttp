@@ -65,11 +65,12 @@ static void _accept(){
     	
 	int sin_size = sizeof ( struct sockaddr_in ) ;
 	int new_fd;
+    int receive_numbytes;
 
     	while (TRUE) {
         
 	    //init client information
-	    struct sockaddr * client_addr = ( struct sockaddr * )malloc( sizeof ( struct sockaddr_in ) );
+	    struct sockaddr_in * client_addr = ( struct sockaddr_in * )malloc( sizeof ( struct sockaddr_in ) );
 	    char	    * buf	  = ( char * )malloc( sizeof ( MAXDATASIZE ) );
 	    
 	    if ( ( new_fd = accept ( sockfd, client_addr, &sin_size) ) == - 1) {
@@ -77,20 +78,23 @@ static void _accept(){
 	            continue ;
 	    }
     
-	    if ( ( recv ( new_fd, buf, MAXDATASIZE, 0) ) == - 1) {
+	    if ( ( receive_numbytes = recv ( new_fd, buf, MAXDATASIZE, 0) ) == - 1) {
 	            perror ( "recv error" ) ;
 	            continue ;
 	    }
+        
+        buf[receive_numbytes] = '\0';
     
-	    rhttp_request * request = _build_rhttp_request( client_addr , buf );
-            rhttp_mpm->process( request );
+	    rhttp_request * request = _build_rhttp_request( new_fd , client_addr , buf);
+        rhttp_mpm->process( request );
 	}   
 }
 
-static rhttp_request *  _build_rhttp_request( struct sockaddr * client_addr, char * buf ){
+static rhttp_request *  _build_rhttp_request( int client_fd , struct sockaddr_in * client_addr, char * buf ){
 	
 	rhttp_request * request = ( rhttp_request *)malloc( sizeof( rhttp_request ) );
-	request->client_addr 	= client_addr;
+	request.client_fd       = client_fd;
+    request->client_addr 	= client_addr;
 	request->buf	        = buf;
 	return request; 
 }
