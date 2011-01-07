@@ -17,11 +17,12 @@ extern rhttp_mod_mpm	* rhttp_mpm;
 static int sockfd;
 
 static struct sockaddr_in server_addr;
+static struct sockaddr_in client_addr;
 
 static void _init_socket();
 static void _listen();
 static void _accept();
-static rhttp_request *  _build_rhttp_request( int client_fd , struct sockaddr_in * client_addr, char * buf );
+static rhttp_request *  _build_rhttp_request( int client_fd ,  char * buf );
 
 
 void start_listen(){
@@ -70,10 +71,11 @@ static void _accept(){
     	while (TRUE) {
         
 	    //init client information
-	    struct sockaddr_in * client_addr = ( struct sockaddr_in * )malloc( sizeof ( struct sockaddr_in ) );
 	    char	    * buf	  = ( char * )malloc( sizeof ( MAXDATASIZE ) );
+	    rhttp_request * request = _build_rhttp_request( new_fd , buf);
+	   
 	    
-	    if ( ( new_fd = accept ( sockfd, ( struct sockaddr * )client_addr, &sin_size) ) == - 1) {
+	    if ( ( new_fd = accept ( sockfd, ( struct sockaddr * )&client_addr, &sin_size) ) == - 1) {
 	            perror ( "accept error" ) ;
 	            continue ;
 	    }
@@ -84,17 +86,16 @@ static void _accept(){
 	    }
         
         buf[receive_numbytes] = '\0';
-    
-	    rhttp_request * request = _build_rhttp_request( new_fd , client_addr , buf);
+	
+	
         rhttp_mpm->process( request );
 	}   
 }
 
-static rhttp_request *  _build_rhttp_request( int client_fd , struct sockaddr_in * client_addr, char * buf ){
+static rhttp_request *  _build_rhttp_request( int client_fd ,  char * buf ){
 	
 	rhttp_request * request = ( rhttp_request *)malloc( sizeof( rhttp_request ) );
 	request->client_fd       = client_fd;
-        request->client_addr 	= client_addr;
 	request->buf	        = buf;
 	return request; 
 }

@@ -4,7 +4,6 @@
 typedef struct{
     
     int                  client_fd;
-    struct sockaddr_in * client_addr;
     char               * buf;
     
 }rhttp_request;

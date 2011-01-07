@@ -1,24 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct{
+	
+	char * a;
+	
+	}ROCKY;
 
 void rocky(){
 	
-	int i = 100;
+	ROCKY * a = malloc( sizeof( ROCKY ) );
+	char    * b = malloc( 10 * sizeof( char ) );
 	
-	while( i > 0 ){
-		
-		printf( "%d \n" , i );
-		fflush(stdout);
-		char * a = ( char * )malloc( 10 * sizeof( char ) );
-		
-		free(a);
-		
-		printf( "%s \n" , a );
+	a->a = b;
 	
-		i = i - 1;
-		
-	}
+	free( b );
+	free( a );
 	
 	
 	
